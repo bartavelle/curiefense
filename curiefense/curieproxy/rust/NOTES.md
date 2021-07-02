@@ -58,6 +58,26 @@ It will perform all the curieproxy checks, and return a pair, with:
  * a JSON-encoded Decision (see below),
  * a list of strings, containing all encountered errors
 
+In order to test drive it:
+ * configuration files are at the expected place, but only the `waf-profiles.json` and `waf-signatures.json` files are required ;
+ * modify the session lua file this way:
+
+```diff
+--- a/curiefense/curieproxy/lua/session_nginx.lua
++++ b/curiefense/curieproxy/lua/session_nginx.lua
+@@ -36,8 +36,9 @@ function session_rust_nginx.inspect(handle)
+     --   * method : the HTTP verb
+     --   * authority : optionally, the HTTP2 authority field
+     local response
+-    response, err = curiefense.inspect_request(
+-        meta, headers, body_content, ip_str, grasshopper
++    response, err = curiefense.inspect_waf(
++        meta, headers, body_content, ip_str, "__default__"
+     )
+ 
+     if err then
+```
+
 # Session API
 
 The session API can be used for fine grained control over the matching process.
